@@ -11,7 +11,7 @@ public class Guider extends NPC
 
 	public void update()
 	{
-		if(main.mili % speed_inv != 0)
+		if(Game.mili % speed_inv != 0)
 		{
 			return;
 		}
@@ -19,29 +19,25 @@ public class Guider extends NPC
 		{
 			if
 			(
-			main.check_col(x+main.tile_size, y)
+			Game.check_col(x+tile_size, y)
 			||
-			main.check_col(x+main.tile_size,y+main.tile_size-1)
+			Game.check_col(x+tile_size,y+tile_size-1)
 			){speed*=-1;}
 		}else
 		{
 			if
 			(
-				main.check_col(x,y)
+				Game.check_col(x,y)
 				||
-				main.check_col(x,y+main.tile_size-1)
+				Game.check_col(x,y+tile_size-1)
 			){speed*=-1;}
 		}
 		
 		x+=speed;
 		
 		if
-		(
-			((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-			&&
-			((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-		){main.GameOver();}
+		(play_col(x,y,tile_size,tile_size))
+		{Game.player.kill();}
 		
 	}
-
 }

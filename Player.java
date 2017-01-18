@@ -6,13 +6,21 @@ import java.awt.event.KeyEvent;
 
 public class Player
 {
+	/* Array Dimensions dictate how many bits the player
+	 * explodes into when killed.*/
+	public Particle[][] player_bits  = new Particle[3][3];
+	
 	public int x;
 	public int y;
 	
+	public int size = Game.tile_size;
+	
 	private int move_speed = 1;
-	private int speed_inv = 1;
+	private int speed_inv = 2;
 	
 	Color c = Color.BLUE;
+	
+	public boolean dead = false;
 	
 	private boolean left$b = false;
 	private boolean right$b = false;
@@ -25,25 +33,77 @@ public class Player
 		this.y = y;
 	}
 	
+	public void kill()
+	{	
+		/* Make sure the player cannot be killed multiple times,
+		 * because that would reset the death animation.*/
+		if(dead){return;}
+		else{dead = true;}
+		
+		/* Excuse the code please, i =  x, j = y */
+		for(int i = 0; i < player_bits[0].length; i++)
+		{
+			for(int j = 0; j < player_bits.length; j++)
+			{
+				player_bits[j][i] = new Particle
+				(
+					x + (size / player_bits[0].length) * i,
+					y + (size / player_bits.length) * j,
+					500,
+					((size / player_bits.length) + (size / player_bits[0].length)) / 2,
+					c
+				);
+			}
+		}
+		
+	}
+	
+	public void dead_update()
+	{
+		/* Respawn player.*/
+		if(!player_bits[0][0].alive)
+		{
+			dead = false;
+			x = Game.current_map.spawn_x;
+			y = Game.current_map.spawn_y;
+			return;
+		}
+		
+		/* Update every particle.*/
+		for(int i  = 0; i < player_bits[0].length; i++)
+		{
+			for(int j = 0; j < player_bits.length; j++)
+			{
+				player_bits[j][i].update();
+			}
+		}
+	}
+	
 	public void update()
 	{
+		if(dead)
+		{
+			dead_update();
+			return;
+		}
+		
 		/* Slow down movement of the player.*/
-		if(main.mili % speed_inv != 0){return;}
+		if(Game.mili % speed_inv != 0){return;}
 		
 		/* Check if the position the player would be put in,
 		 * from the key_code is illegal, if not, move it.
 		 * Otherwise nothing happens.*/
 		if(left$b){
-			if(!(main.check_col(x-1,y) || main.check_col(x-1,y+main.tile_size-1))){x-=move_speed;};
+			if(!(Game.check_col(x-1,y) || Game.check_col(x-1,y+size-1))){x-=move_speed;};
 		};
 		if(right$b){
-			if(!(main.check_col(x+main.tile_size,y) || main.check_col(x+main.tile_size,y+main.tile_size-1))){x+=move_speed;};
+			if(!(Game.check_col(x+size,y) || Game.check_col(x+size,y+size-1))){x+=move_speed;};
 		};
 		if(up$b){
-			if(!(main.check_col(x,y+main.tile_size) || main.check_col(x+main.tile_size-1,y+main.tile_size))){y+=move_speed;};
+			if(!(Game.check_col(x,y+size) || Game.check_col(x+size-1,y+size))){y+=move_speed;};
 		};
 		if(down$b){
-			if(!(main.check_col(x,y-1) || main.check_col(x+main.tile_size-1,y-1))){y-=move_speed;};
+			if(!(Game.check_col(x,y-1) || Game.check_col(x+size-1,y-1))){y-=move_speed;};
 		}
 	}
 	
@@ -85,7 +145,18 @@ public class Player
 	}
 	public void draw(Graphics g)
 	{
+		if(dead)
+		{
+			for(int i = 0; i < player_bits[0].length; i++)
+			{
+				for(int j = 0; j < player_bits.length; j++)
+				{
+					player_bits[j][i].draw(g);
+				}
+			}
+			return;
+		}
 		g.setColor(c);
-		g.fillRect(x-Camera.x,y-Camera.y,main.tile_size,main.tile_size);
+		g.fillRect(x-Camera.x,y-Camera.y,size,size);
 	}
 }

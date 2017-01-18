@@ -14,21 +14,17 @@ public class Slider extends NPC
 	{
 		if(speed < 0)
 		{
-			if(!(main.check_col(x,y+1) || main.check_col(x+main.tile_size-1,y+1)))
-			{if(main.mili % speed_inv == 0){y+=speed;}}else{speed*=-1;}
+			if(!(Game.check_col(x,y+1) || Game.check_col(x+tile_size-1,y+1)))
+			{if(Game.mili % speed_inv == 0){y+=speed;}}else{speed*=-1;}
 		}else
 		{
-			if(!(main.check_col(x,y+main.tile_size) || main.check_col(x+main.tile_size-1, y+main.tile_size)))
-			{if(main.mili % speed_inv == 0){y+=speed;}}else{speed*=-1;}
+			if(!(Game.check_col(x,y+tile_size) || Game.check_col(x+tile_size-1, y+tile_size)))
+			{if(Game.mili % speed_inv == 0){y+=speed;}}else{speed*=-1;}
 		}
 		
 		// Check if the enemy is colliding with the player, if it is, end the game.
 		if
-		(
-			((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-			&&
-			((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-		){main.GameOver();}
+		(play_col(x,y,tile_size,tile_size))
+		{Game.player.kill();}
 	}
-	
 }

@@ -8,16 +8,18 @@ public class Timicide extends NPC
 {
 	public int play_last_x;
 	public int play_last_y;
-	public int wait;
+	public final int wait;
 	public int remaining;
 	public int number;
+	public final int number2;
 	public Color text_c;
-	public Font font = new Font("Consolas", Font.BOLD ,main.tile_size / (""+number).length());
+	public Font font = new Font("Consolas", Font.BOLD ,tile_size / (""+number).length());
 	public Timicide(int x, int y, int wait, int number)
 	{
 		super(x, y);
 		this.wait = wait;
 		this.number = number;
+		number2 = this.number;
 		remaining =  this.wait;
 		c = Color.lightGray;
 		text_c = Color.BLACK;
@@ -39,13 +41,10 @@ public class Timicide extends NPC
 		
 		//Have the timicide act as if its a solid.
 		if
-		(
-			((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-			&&
-			((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-		){main.player.x=play_last_x;main.player.y=play_last_y;}
-		play_last_x = main.player.x;
-		play_last_y = main.player.y;
+		(play_col(x,y,tile_size,tile_size))
+		{Game.player.x=play_last_x;Game.player.y=play_last_y;}
+		play_last_x = Game.player.x;
+		play_last_y = Game.player.y;
 	}
 	
 	@Override
@@ -57,9 +56,9 @@ public class Timicide extends NPC
 			return;
 		}
 		g.setColor(c);
-		g.fillRect(x-Camera.x,y-Camera.y,main.tile_size,main.tile_size);
+		g.fillRect(x-Camera.x,y-Camera.y,tile_size,tile_size);
 		g.setColor(text_c);
 		g.setFont(font);
-		g.drawString(""+number,x-Camera.x,y+main.tile_size-Camera.y);
+		g.drawString(""+number,x-Camera.x,y+tile_size-Camera.y);
 	}
 }

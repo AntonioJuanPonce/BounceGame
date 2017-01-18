@@ -17,11 +17,7 @@ public class Goal extends NPC {
 	{
 		//Check if the player is in the goal, if it is, progress to the next level.
 		if
-		(
-			((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-			&&
-			((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-		){main.NextLevel();}
+		(play_col(x,y,tile_size,tile_size))
+		{Game.NextLevel();}
 	}
-
 }

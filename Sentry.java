@@ -21,17 +21,17 @@ public class Sentry extends NPC {
 	
 	public void update()
 	{
-	int targetx = main.player.x;
-	int targety = main.player.y;
+	int targetx = Game.player.x;
+	int targety = Game.player.y;
 	
 	}
 	@Override
 	public void draw(Graphics g)
 	{
 		g.setColor(c);
-		g.fillRect(x,y,main.tile_size,main.tile_size);
-		g.drawLine(x + 24, y + 24, main.player.x + 24, main.player.y + 24);
-		while(check_col2(inv_ray_x,inv_ray_y,main.player.x,main.player.y)) {
+		g.fillRect(x,y,tile_size,tile_size);
+		g.drawLine(x + 24, y + 24, Game.player.x + 24, Game.player.y + 24);
+		while(check_col2(inv_ray_x,inv_ray_y,Game.player.x,Game.player.y)) {
 			
 		}
 	}
@@ -41,17 +41,17 @@ public class Sentry extends NPC {
 	}
 	//This draws a ray to the player.  If it collides, fire away.
 	private boolean check_col2(int inv_ray_x2, int inv_ray_y2, int x, int y) {
-		if((x > main.player.x) && y > (main.player.y)) {
-			if((x < main.player.x + main.tile_size) && (y < main.player.y + main.tile_size)){
+		if((x > Game.player.x) && y > (Game.player.y)) {
+			if((x < Game.player.x + tile_size) && (y < Game.player.y + Game.tile_size)){
 				return true;
 			}
 		}
 		return false;
 	}
 	public boolean hit_player() {
-		Line line = new Line(inv_ray_x,inv_ray_y,main.player.x,main.player.y);
+		Line line = new Line(inv_ray_x,inv_ray_y,Game.player.x,Game.player.y);
 		while(true) {
-			main.check_col(ray_x,ray_y);
+			Game.check_col(ray_x,ray_y);
 		}
 	}
 }

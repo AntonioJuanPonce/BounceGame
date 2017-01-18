@@ -9,7 +9,7 @@ public class Door extends NPC
 	public int key_y;
 	private int play_last_x;
 	private int play_last_y;
-	private boolean destroyed = false;
+	public boolean destroyed = false;
 	private Color key_c = Color.MAGENTA;
 	private Color inset_c = Color.GRAY;
 	
@@ -31,19 +31,13 @@ public class Door extends NPC
 		if(!destroyed)
 		{
 			if
-			(
-				((main.player.x > key_x-main.tile_size) && (main.player.x < key_x+main.tile_size))
-				&&
-				((main.player.y > key_y-main.tile_size) && (main.player.y < key_y+main.tile_size))
-			){destroyed = true;main.play_sound.play_sound(0);}
+			(play_col(key_x, key_y, tile_size, tile_size))
+			{destroyed = true;Game.play_sound.play_sound(0);}
 			if
-			(
-				((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-				&&
-				((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-			){main.player.x=play_last_x;main.player.y=play_last_y;}
-			play_last_x = main.player.x;
-			play_last_y = main.player.y;
+			(play_col(x,y,tile_size,tile_size))
+			{Game.player.x=play_last_x;Game.player.y=play_last_y;}
+			play_last_x = Game.player.x;
+			play_last_y = Game.player.y;
 		}
 	}
 	@Override
@@ -52,11 +46,11 @@ public class Door extends NPC
 		if(!destroyed)
 		{
 			g.setColor(c);
-			g.fillRect(x-Camera.x,y-Camera.y,main.tile_size,main.tile_size);
+			g.fillRect(x-Camera.x,y-Camera.y,tile_size,tile_size);
 			g.setColor(inset_c);
-			g.fillRect(x+(main.tile_size/4)-Camera.x,y+(main.tile_size/4)-Camera.y,main.tile_size/2,main.tile_size/2);
+			g.fillRect(x+(tile_size/4)-Camera.x,y+(tile_size/4)-Camera.y,tile_size/2,tile_size/2);
 			g.setColor(key_c);
-			g.fillRect(key_x-Camera.x,key_y-Camera.y,main.tile_size,main.tile_size);
+			g.fillRect(key_x-Camera.x,key_y-Camera.y,tile_size,tile_size);
 		}
 	}
 }

@@ -4,9 +4,9 @@ public class Bouncer extends NPC
 {
 	public int speed_x = 1;
 	public int speed_y = 1;
-	public int speed_inv;
+	public double speed_inv;
 	
-	public Bouncer(int x, int y, int speed_inv)
+	public Bouncer(int x, int y, double speed_inv)
 	{
 		super(x, y);
 		this.speed_inv = speed_inv;
@@ -17,110 +17,97 @@ public class Bouncer extends NPC
 	{
 		// Check if the enemy is colliding with the player, if it is, end the game.
 		if
-		(
-			((main.player.x > x-main.tile_size) && (main.player.x < x+main.tile_size))
-			&&
-			((main.player.y > y-main.tile_size) && (main.player.y < y+main.tile_size))
-		){main.GameOver();}
+		(play_col(x,y,tile_size,tile_size))
+		{Game.player.kill();}
 		
 		//Slow down the bouncer.
-		if(main.mili % speed_inv != 0)
+		if(Game.mili % speed_inv != 0)
 		{
 			return;
 		}
 		
-		// Have the Bouncer bounce off the walls.
+		//Code for bouncer.
 		if(speed_x > 0)
 		{
-			// Direction: Lower right.
+			//Collision direction lower-right.
 			if(speed_y > 0)
 			{
-				if
+				if //Check corner.
 				(
-					main.check_col(x+main.tile_size,y)
-					||
-					main.check_col(x+main.tile_size,y+main.tile_size-1)
-				){speed_x*=-1;}
-				else if
+					Game.check_col(x + tile_size, y + tile_size)
+				){speed_x *= -1; speed_y *= -1;}
+				else if //Check bottom.
 				(
-					main.check_col(x,y+main.tile_size)
+					Game.check_col(x + speed_x,y + tile_size + speed_y)
 					||
-					main.check_col(x+main.tile_size-1,y+main.tile_size)
-				){speed_y *=-1;}
-			}
-			else // Direction: Upper right.
+					Game.check_col(x + tile_size + speed_x,y + tile_size + speed_y)
+				){speed_y *= -1;}
+				else if //Check right side.
+				(
+					Game.check_col(x + tile_size + speed_x,y + speed_y)
+					||
+					Game.check_col(x + tile_size + speed_x,y + tile_size + speed_y)
+				){speed_x *= -1;}
+			}else // Collision direction upper-right.
 			{
-				if
+				if //Check top.
 				(
-					main.check_col(x+main.tile_size,y)
+					Game.check_col(x + speed_x,y + speed_y)
 					||
-					main.check_col(x+main.tile_size,y+main.tile_size)
-				){speed_x*=-1;}
-				else if
+					Game.check_col(x + tile_size + speed_x,y + speed_y)
+				){speed_y *= -1;}
+				else if //Check right side.
 				(
-					main.check_col(x+main.tile_size,y-1)
+					Game.check_col(x + tile_size + speed_x,y + speed_y)
 					||
-					main.check_col(x,y-1)
-				){speed_y*=-1;}
+					Game.check_col(x + tile_size + speed_x,y + tile_size + speed_y)
+				){speed_x *= -1;}
+				else if //Check corner.
+				(
+					Game.check_col(x + tile_size,y)
+				){speed_x *= -1; speed_y *= -1;}
 			}
-		}
-		else
+		}else
 		{
-			// Direction: Lower left.
-			if(speed_y > 0)
+			if(speed_y > 0) //Collision direction lower-left.
 			{
-				if
+				if //Check corner.
 				(
-					main.check_col(x,y)
-					||
-					main.check_col(x,y+main.tile_size-1)
-				){speed_x*=-1;}
-				else if
+					Game.check_col(x, y + tile_size)
+				){speed_x *= -1; speed_y *= -1;}
+				else if //Check top.
 				(
-					main.check_col(x,y+main.tile_size)
+					Game.check_col(x + speed_x,y + speed_y)
 					||
-					main.check_col(x+main.tile_size-1,y+main.tile_size)
-				){speed_y*=-1;}
-			}
-			else // Direction: Upper left.
+					Game.check_col(x + tile_size + speed_x,y + speed_y)
+				){speed_y *= -1;}
+				else if //Check left side.
+				(
+					Game.check_col(x + speed_x,y + speed_y)
+					||
+					Game.check_col(x + speed_x,y + tile_size + speed_y)
+				){speed_x *= -1;}
+			}else //Collision direction upper-left.
 			{
-				if
+				if //Check corner.
 				(
-					main.check_col(x,y)
-					||
-					main.check_col(x,y+main.tile_size)
-				){speed_x*=-1;}
-				else if
+					Game.check_col(x,y)
+				){speed_y *= -1; speed_x *= -1;}
+				else if //Check left side.
 				(
-					main.check_col(x,y-1)
+					Game.check_col(x + speed_x,y + speed_y)
 					||
-					main.check_col(x+main.tile_size,y-1)
-				){speed_y*=-1;}
+					Game.check_col(x + speed_x,y + tile_size + speed_y)
+				){speed_x *= -1;}
+				else if //Check top.
+				(
+					Game.check_col(x + speed_x,y + speed_y)
+					||
+					Game.check_col(x + tile_size + speed_x,y + speed_y)
+				){speed_y *= -1;}
 			}
 		}
 		x += speed_x;
 		y += speed_y;
-		
-		/*
-		 * Old code, re-implement possible.
-		if(main.mili % 3 == 0)
-		{
-			if
-			(
-				(main.check_col(x,y-1) || main.check_col(x+main.tile_size,y-1))
-				||
-				(main.check_col(x,y+main.tile_size)) || main.check_col(x+main.tile_size,y+main.tile_size+1)
-				){speed_y*=-1;}
-			if
-			(
-				(main.check_col(x,y) || main.check_col(x,y+main.tile_size+1))
-				||
-				(main.check_col(x+main.tile_size-1,y) || main.check_col(x+main.tile_size,y+main.tile_size+1))
-				){speed_x*=-1;}
-			x += speed_x;
-			y += speed_y;
-		}
-		*/
 	}
-
 }

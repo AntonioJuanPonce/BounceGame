@@ -29,7 +29,7 @@ public class Map
 		try {
 			scanner = new Scanner(new File(filename));
 		} catch (FileNotFoundException e) {
-			main.Error("The map: "+filename+" could not be found.\nContact "+main.email);
+			Game.Error("The map: "+filename+" could not be found.\nContact "+Game.email);
 		}
 		
 		/*
@@ -41,9 +41,5 @@ public class Map
 		   tall[i++] = scanner.nextInt();
 		}
 		*/
-	}
-	public int[] GetIntArray(Scanner scanner)
-	{
-		return new int[0];
 	}
 }
